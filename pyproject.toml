@@ -73,10 +73,7 @@ rm -r dist"""
 clean-all = """\
 pw@clean
 rm -r .pyprojectx"""
-black = "black tomlkit tests"
-isort = "isort tomlkit tests"
-unit-test = "poetry run pytest tests/unit"
-integration-test = "poetry run pytest tests/integration"
+format-code = "black tomlkit && pw@isort tomlkit"
 test = "poetry run pytest tests/"
 lint = "flake8 tomlkit"
 check-black = "black tomlkit --check"
