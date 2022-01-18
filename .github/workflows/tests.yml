@@ -64,4 +64,4 @@ jobs:
 
       - name: Install dependencies and run tests
         shell: bash
-        run: ./pw i && ./pw test
+        run: python pw i && python pw test

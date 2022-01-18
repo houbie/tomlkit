@@ -25,4 +25,4 @@ jobs:
           path: .pyprojectx
           key: ${{ runner.os }}-pyprojectx
       - name: Run tests
-        run: ./pw i && ./pw test
+        run: python pw i && python pw test
