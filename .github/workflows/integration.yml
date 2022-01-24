@@ -23,6 +23,6 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .pyprojectx
-          key: ${{ runner.os }}-pyprojectx
+          key: ${{ runner.os }}-python3.9-pyprojectx
       - name: Run tests
         run: python pw i && python pw test
