@@ -23,21 +23,13 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [Ubuntu, MacOS, Windows]
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        os: [ Ubuntu, MacOS, Windows ]
+        python-version: [ 3.7, 3.8, 3.9, "3.10" ]
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: "recursive"
-
-      - name: Cache .pyprojectx
-        uses: actions/cache@v2
-        env:
-          cache-name: .pyprojectx
-        with:
-          path: .pyprojectx
-          key: ${{ runner.os }}-pyprojectx
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -50,12 +42,13 @@ jobs:
         run: |
           echo ::set-output name=version::$(python -c "import sys; print('-'.join(str(v) for v in sys.version_info))")
 
-      - name: Set up cache
+      - name: Cache .pyprojectx and .venv
         uses: actions/cache@v2
-        id: cache
         with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
+          path: |
+            .pyprojectx
+            .venv
+          key: ${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Ensure cache is healthy
         if: steps.cache.outputs.cache-hit == 'true'

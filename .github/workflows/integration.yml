@@ -21,8 +21,6 @@ jobs:
           python-version: 3.9
       - name: Cache .pyprojectx
         uses: actions/cache@v2
-        env:
-          cache-name: .pyprojectx
         with:
           path: .pyprojectx
           key: ${{ runner.os }}-pyprojectx
