@@ -1,50 +1,75 @@
-[github_release]: https://img.shields.io/github/release/sdispater/tomlkit.svg?logo=github&logoColor=white
-[pypi_version]: https://img.shields.io/pypi/v/tomlkit.svg?logo=python&logoColor=white
-[python_versions]: https://img.shields.io/pypi/pyversions/tomlkit.svg?logo=python&logoColor=white
-[github_license]: https://img.shields.io/github/license/sdispater/tomlkit.svg?logo=github&logoColor=white
-[github_action]: https://github.com/sdispater/tomlkit/actions/workflows/tests.yml/badge.svg
+# Executable documentation PoC
 
-[![GitHub Release][github_release]](https://github.com/sdispater/tomlkit/releases/)
-[![PyPI Version][pypi_version]](https://pypi.org/project/tomlkit/)
-[![Python Versions][python_versions]](https://pypi.org/project/tomlkit/)
-[![License][github_license]](https://github.com/sdispater/tomlkit/blob/master/LICENSE)
-<br>
-[![Tests][github_action]](https://github.com/sdispater/tomlkit/actions/workflows/tests.yml)
+Automagically start markdown documentation as [Jupyter](https://jupyter.org/) notebook:
 
-# TOML Kit - Style-preserving TOML library for Python
+* mac/linux
 
-TOML Kit is a **1.0.0-compliant** [TOML](https://toml.io/) library.
-
-It includes a parser that preserves all comments, indentations, whitespace and internal element ordering,
-and makes them accessible and editable via an intuitive API.
-
-You can also create new TOML documents from scratch using the provided helpers.
-
-Part of the implementation as been adapted, improved and fixed from [Molten](https://github.com/LeopoldArkham/Molten).
-
-## Usage
-
-See the [documentation](docs/quickstart.rst) for more information.
-
-## Installation
-
-If you are using [Poetry](https://poetry.eustace.io),
-add `tomlkit` to your `pyproject.toml` file by using:
-
-```bash
-poetry add tomlkit
+```shell
+git clone https://github.com/houbie/tomlkit.git
+cd tomlkit
+# windows users: remove the leading ./
+./pw rD # shorthand for ./pw run-docs
 ```
 
-If not, you can use `pip`:
+This will launch a Jupyter server after which you can open the _quickstart_ notebook and start experimenting.
 
-```bash
-pip install tomlkit
+You only need git and python 3.7+ to be available on your path, everything else gets installed in _.pyprojectx_
+inside the project dir (comparable with _node_modules_).
+
+## How does it work?
+
+* Jupyter and the project dir (current dir) are added to the _tool.pyprojectx_ section in _pyproject.toml_, making them
+  both available in an isolated virtual environment (no impact on project dependencies).
+
+```toml
+[tool.pyprojectx]
+jupyter = """\
+jupyter
+.
+"""
 ```
 
-## Running tests
+* The _run-docs_ alias is configured to generate a Jupyter notebook from the markdown documentation and start the
+  Jupyter server:
 
-Please clone the repo with submodules with the following command
-`git clone --recurse-submodules https://github.com/sdispater/tomlkit.git`.
-We need the submodule - `toml-test` for running the tests.
+```toml
+[tool.pyprojectx.aliases]
+run-docs = "pw@poetry run python docs/rst2notebook.py && pw@jupyter notebook --notebook-dir=docs"
+```
 
-You can run the tests with `poetry run pytest -q tests`
+## Notebook generation
+
+The _rst2notebook.py_ script generates a _ipynb_ json with markdown cells and code cells. The code cells are extracted
+from the interactive Python sessions inside the markdown docs.
+
+```markdown
+Modifying
+---------
+TOML Kit provides an intuitive API to modify TOML documents::
+    >>> from tomlkit import dumps
+    >>> from tomlkit import parse
+    >>> from tomlkit import table
+```
+
+is converted to:
+
+```json
+[
+  {
+    "cell_type": "markdown",
+    "source": [
+      "Modifying\n",
+      "---------\n",
+      "TOML Kit provides an intuitive API to modify TOML documents::\n"
+    ]
+  },
+  {
+    "cell_type": "code",
+    "source": [
+      "from tomlkit import dumps\n",
+      "from tomlkit import parse\n",
+      "from tomlkit import table\n"
+    ]
+  }
+]
+```
