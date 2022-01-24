@@ -33,3 +33,4 @@ MANIFEST.in
 .mypy_cache
 benchmark.py
 /.pyprojectx/
+/docs/*.ipynb*
