@@ -87,7 +87,7 @@ check-black = "black tomlkit --check"
 check = "pw@check-black && pw@lint && pw@test"
 build = "pw@install && pw@check && pw@poetry build"
 generate-docs = "@sphinx: sphinx-build docs build/docs"
-run-docs = "python docs/rst2notebook.py && pw@jupyter notebook --notebook-dir=docs"
+run-docs = "python docs/md2notebook.py && pw@jupyter notebook --notebook-dir=docs"
 
 [tool.pyprojectx.os.win.aliases]
 clean = """\
